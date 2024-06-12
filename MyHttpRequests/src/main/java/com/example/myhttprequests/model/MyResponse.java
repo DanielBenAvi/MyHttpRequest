@@ -4,6 +4,11 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+/**
+ * This class is used to create a response object from the server
+ * @implSpec - The response object is used to store the response code, response message and response body from the server
+ * @implNote - The response body can be converted to an object using the getResponseTypedBody method
+ */
 public class MyResponse {
     private int responseCode;
     private String responseMessage;
@@ -12,6 +17,12 @@ public class MyResponse {
     public MyResponse() {
     }
 
+    /**
+     * This constructor is used to create a response object
+     * @param responseCode - The response code from the server
+     * @param responseMessage - The response message from the server
+     * @param responseBody - The response body from the server
+     */
     public MyResponse(int responseCode, String responseMessage, String responseBody) {
         this.responseCode = responseCode;
         this.responseMessage = responseMessage;
