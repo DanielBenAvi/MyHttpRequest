@@ -7,11 +7,15 @@ import android.util.Log;
 
 import com.example.myhttprequests.Interfaces.HttpCallback;
 import com.example.myhttprequests.model.MyResponse;
+import com.example.myhttprequests.model.params.Params;
+import com.example.myhttprequests.model.params.PathVariable;
+import com.example.myhttprequests.model.params.QueryParam;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class MyHttpGet {
@@ -61,6 +65,9 @@ public class MyHttpGet {
         for (String pathVariable : pathVariables) {
             newPath.append("/").append(pathVariable);
         }
+
+        Log.d("INFO", "getRequest: newPath: " + newPath.toString());
+
         getRequest(newPath.toString(), httpCallback);
     }
 
@@ -71,6 +78,7 @@ public class MyHttpGet {
      * @param httpCallback - The callback to be called when the request is complete
      */
     public void getRequest(String path, Map<String, String> queryParameters, HttpCallback httpCallback) {
+        Log.d("INFO", "getRequest: queryParameters: " + queryParameters);
         if (queryParameters == null) {
             Log.d("ERROR", "getRequest: queryParameters is null");
             return;
@@ -87,6 +95,9 @@ public class MyHttpGet {
             newPath.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
         }
         newPath.deleteCharAt(newPath.length() - 1);
+
+        Log.d("INFO", "getRequest: newPath: " + newPath);
+
         getRequest(newPath.toString(), httpCallback);
     }
 
@@ -132,19 +143,55 @@ public class MyHttpGet {
     }
 
 
-//    private MyResponse getResponse(HttpURLConnection httpURLConnection) throws IOException {
-//        InputStream inputStream = new BufferedInputStream(httpURLConnection.getInputStream());
-//        int statusCode = httpURLConnection.getResponseCode();
-//        String statusMessage = httpURLConnection.getResponseMessage();
-//
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//        StringBuilder result = new StringBuilder();
-//        String line;
-//        while ((line = reader.readLine()) != null) {
-//            result.append(line);
-//        }
-//
-//        return new MyResponse(statusCode, statusMessage, result.toString());
-//    }
+    /**
+     * This method is used to make a GET request to the server with path variables and query parameters
+     * @param path - The URL to make the request to
+     * @param httpCallback - The callback to be called when the request is complete
+     * @param Params * - List of path variables and query parameters to be added to the URL
+     */
+    public void getRequest(String path, HttpCallback httpCallback, Params... Params) {
+        if (Params.length == 0) {
+            getRequest(path, httpCallback);
+            Log.d("ERROR", "getRequest: Params is empty");
+            return;
+        }
+
+        for (Params param : Params) {
+            Log.d("INFO", param.toString());
+
+        }
+
+        ArrayList<String> pathVariables = new ArrayList<>();
+        HashMap<String, String> queryParams = new HashMap<>();
+
+        for (Params param : Params) {
+            if (param.getClass() == PathVariable.class) {
+                PathVariable pathVariable = (PathVariable) param;
+                pathVariables.add(pathVariable.getValue());
+            }
+
+            if (param.getClass() == QueryParam.class) {
+                QueryParam queryParam = (QueryParam) param;
+                queryParams.put(queryParam.getKey(), queryParam.getValue());
+            }
+        }
+
+
+        if (pathVariables.isEmpty() && queryParams.isEmpty()) {
+            getRequest(path, httpCallback);
+            Log.d("INFO", "getRequest: pathVariables and queryParams are empty");
+        } else if (pathVariables.isEmpty()) {
+            getRequest(path, queryParams, httpCallback);
+            Log.d("INFO", "getRequest: pathVariables is empty");
+            Log.d("INFO", "getRequest: queryParams is not empty");
+        } else if (queryParams.isEmpty()) {
+            getRequest(path, pathVariables, httpCallback);
+            Log.d("INFO", "getRequest: queryParams is empty");
+            Log.d("INFO", "getRequest: pathVariables is not empty");
+        } else {
+            getRequest(path, pathVariables, queryParams, httpCallback);
+            Log.d("INFO", "getRequest: pathVariables and queryParams are not empty");
+        }
+    }
 
 }

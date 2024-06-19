@@ -3,6 +3,7 @@ package com.example.httprequest;
 import static com.example.myhttprequests.rest.RestHelper.mapToBody;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import com.example.myhttprequests.Interfaces.HttpCallback;
 import com.example.myhttprequests.model.MyResponse;
 import com.example.myhttprequests.model.params.PathVariable;
 import com.example.myhttprequests.model.params.QueryParam;
+import com.example.myhttprequests.rest.MyHttpGet;
 import com.example.myhttprequests.rest.MyHttpPost;
 import com.google.android.material.button.MaterialButton;
 
@@ -36,11 +38,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDogFact() {
-        MyHttpPost httpPost = new MyHttpPost();
-        String baseUrl = "http://10.0.2.2:5000/parameters";
-        Map<String, String> data = Map.of("username", "daniel", "password", "1234");
-
-        httpPost.postRequest(baseUrl, mapToBody(data), new HttpCallback() {
+        String baseUrl = "http://10.0.2.2:5000/get";
+        MyHttpGet myHttpGet = new MyHttpGet();
+        myHttpGet.getRequest(baseUrl, new HttpCallback() {
             @Override
             public void onError(String error) {
                 textView.setText(error);
@@ -49,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(MyResponse response) {
                 textView.setText(response.getResponseBody());
+                Log.d("RESPONSE", response.getResponseBody());
             }
-        },
-            new QueryParam("password", "1234"),
-            new QueryParam("username", "daniel")
+        },  new QueryParam("name", "dog")
         );
+
+
 
 
     }

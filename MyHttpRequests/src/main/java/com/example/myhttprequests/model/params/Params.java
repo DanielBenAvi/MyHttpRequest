@@ -1,5 +1,7 @@
 package com.example.myhttprequests.model.params;
 
+import androidx.annotation.NonNull;
+
 public abstract class Params {
     protected String value;
 
@@ -9,5 +11,12 @@ public abstract class Params {
 
     public String getValue() {
         return value;
+    }
+
+    @NonNull
+    public String toString() {
+        return "Params{" +
+                "value='" + value + '\'' +
+                "}";
     }
 }
