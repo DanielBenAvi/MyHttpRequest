@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.example.myhttprequests.Interfaces.HttpCallback;
 import com.example.myhttprequests.model.MyResponse;
+import com.example.myhttprequests.model.params.Params;
+import com.example.myhttprequests.model.params.PathVariable;
+import com.example.myhttprequests.model.params.QueryParam;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -144,6 +147,42 @@ public class MyHttpPost {
         }
 
         postRequest(newPath.toString(), data, httpCallback);
+    }
+
+
+    public void postRequest(String path, String data, HttpCallback httpCallback,Params ...params){
+
+        if (params.length == 0) {
+            postRequest(path, data, httpCallback);
+            return;
+        }
+
+        ArrayList<String> pathVariables = new ArrayList<>();
+        HashMap<String, String> queryParams = new HashMap<>();
+
+        for (Params param : params) {
+            if (param.getClass() == PathVariable.class) {
+                PathVariable pathVariable = (PathVariable) param;
+                pathVariables.add(pathVariable.getValue());
+            }
+
+            if (param.getClass() == QueryParam.class) {
+                com.example.myhttprequests.model.params.QueryParam queryParam = (com.example.myhttprequests.model.params.QueryParam) param;
+                queryParams.put(queryParam.getKey(), queryParam.getValue());
+            }
+
+        }
+
+        if (pathVariables.isEmpty() && queryParams.isEmpty()) {
+            postRequest(path, data, httpCallback);
+        } else if (pathVariables.isEmpty()) {
+            postRequest(path, data, queryParams, httpCallback);
+        } else if (queryParams.isEmpty()) {
+            postRequest(path, data, pathVariables, httpCallback);
+        } else {
+            postRequest(path, data, pathVariables, queryParams, httpCallback);
+        }
+
     }
 
 }

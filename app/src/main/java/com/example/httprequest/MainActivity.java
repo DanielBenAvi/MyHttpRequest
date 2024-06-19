@@ -1,18 +1,24 @@
 package com.example.httprequest;
 
+import static com.example.myhttprequests.rest.RestHelper.mapToBody;
+
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myhttprequests.Interfaces.HttpCallback;
 import com.example.myhttprequests.model.MyResponse;
+import com.example.myhttprequests.model.params.PathVariable;
+import com.example.myhttprequests.model.params.QueryParam;
 import com.example.myhttprequests.rest.MyHttpPost;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button;
+    private MaterialButton button;
     private TextView textView;
 
 
@@ -30,31 +36,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDogFact() {
-//        MyHttpGet httpGet = new MyHttpGet();
-//        String baseUrl = "http://10.0.2.2:5000/parameters";
-//        ArrayList<String> pathVariables = new ArrayList<>();
-//        pathVariables.add("dog");
-//
-//        Map<String, String> queryParams = new HashMap<>();
-//        queryParams.put("password", "1234");
-//
-//        httpGet.getRequest(baseUrl, queryParams , new HttpCallback() {
-//
-//            @Override
-//            public void onError(String error) {
-//                textView.setText(error);
-//            }
-//
-//            @Override
-//            public void onSuccess(MyResponse response) {
-//                textView.setText(response.getResponseBody());
-//            }
-//        });
-
         MyHttpPost httpPost = new MyHttpPost();
-        String baseUrl = "http://10.0.2.2:5000/post";
-        String data = "{\"username\":\"daniel\",\"password\":\"1234\"}";
-        httpPost.postRequest(baseUrl, data, new HttpCallback() {
+        String baseUrl = "http://10.0.2.2:5000/parameters";
+        Map<String, String> data = Map.of("username", "daniel", "password", "1234");
+
+        httpPost.postRequest(baseUrl, mapToBody(data), new HttpCallback() {
             @Override
             public void onError(String error) {
                 textView.setText(error);
@@ -64,7 +50,10 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(MyResponse response) {
                 textView.setText(response.getResponseBody());
             }
-        });
+        },
+            new QueryParam("password", "1234"),
+            new QueryParam("username", "daniel")
+        );
 
 
     }
