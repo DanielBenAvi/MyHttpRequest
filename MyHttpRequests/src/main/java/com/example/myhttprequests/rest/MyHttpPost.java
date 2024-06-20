@@ -40,6 +40,8 @@ public class MyHttpPost {
                 try(OutputStream os = urlConnection.getOutputStream()) {
                     byte[] input = data.getBytes(StandardCharsets.UTF_8);
                     os.write(input, 0, input.length);
+                } catch (Exception e) {
+                    httpCallback.onError(e.getMessage());
                 }
 
                 MyResponse response = getResponse(urlConnection);
@@ -150,6 +152,13 @@ public class MyHttpPost {
     }
 
 
+    /**
+     * This method is used to make a POST request to the server with data as a JSON string
+     * @param path - The URL to make the request to
+     * @param data - The data to be sent to the server
+     * @param httpCallback - The callback to be called when the request is complete
+     * @param params * - List of path variables and query parameters to be added to the URL
+     */
     public void postRequest(String path, String data, HttpCallback httpCallback,Params ...params){
 
         if (params.length == 0) {
@@ -167,7 +176,7 @@ public class MyHttpPost {
             }
 
             if (param.getClass() == QueryParam.class) {
-                com.example.myhttprequests.model.params.QueryParam queryParam = (com.example.myhttprequests.model.params.QueryParam) param;
+                QueryParam queryParam = (QueryParam) param;
                 queryParams.put(queryParam.getKey(), queryParam.getValue());
             }
 

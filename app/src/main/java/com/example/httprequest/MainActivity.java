@@ -38,20 +38,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadDogFact() {
-        String baseUrl = "http://10.0.2.2:5000/get";
+        String baseUrl = "http://10.0.2.2:5000/post";
+        MyHttpPost myHttpPost = new MyHttpPost();
         MyHttpGet myHttpGet = new MyHttpGet();
-        myHttpGet.getRequest(baseUrl, new HttpCallback() {
+
+        myHttpPost.postRequest(baseUrl, mapToBody(Map.of("name", "dog")), new HttpCallback() {
             @Override
             public void onError(String error) {
-                textView.setText(error);
+                Log.d("ERROR", "onError: " + error);
             }
 
             @Override
             public void onSuccess(MyResponse response) {
                 textView.setText(response.getResponseBody());
-                Log.d("RESPONSE", response.getResponseBody());
             }
-        },  new QueryParam("name", "dog")
+        },
+                new QueryParam("query_param", "dog")
+
         );
 
 
