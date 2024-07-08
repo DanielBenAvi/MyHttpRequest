@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-}
+    }
 
 android {
     namespace = "com.example.myhttprequests"
@@ -28,6 +28,8 @@ android {
     }
 }
 
+
+
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
@@ -39,4 +41,5 @@ dependencies {
 
     // mokito
     testImplementation("org.mockito:mockito-core:5.11.0")
+
 }
