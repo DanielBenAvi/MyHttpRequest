@@ -225,6 +225,7 @@ public class PathVariables extends Params {
     });
 ```
 
+
 4. POST Request with Path Variables and Query Parameters
 ```java
     String url = "path example";
