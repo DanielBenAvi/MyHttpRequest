@@ -16,11 +16,29 @@ This is a simple http request for android using without any external library for
 
 ## Installation with Gradle
 
-```gradle.kts
+in build.gradle.kts
+```kotlin
 dependencies {
-    implementation("")
+    ...
+    implementation("com.github.DanielBenAvi:MyHttpRequest:1.0.0")
+    ...
 }
 ```
+in setting.gradle.kts
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        ...
+        maven("https://jitpack.io")
+        ...
+    }
+}
+```
+in manifest 
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+```
+
 
 ## Specifications
 
